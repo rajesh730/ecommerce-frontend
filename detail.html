@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Product Details</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="nav.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .product-details {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .product-details img {
+        max-width: 100%;
+        max-height: 300px;
+        margin-bottom: 10px;
+      }
+
+      .product-details h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .product-details p {
+        margin-bottom: 10px;
+      }
+
+      #add-to-cart-btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      #add-to-cart-btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- -------------------nav------------------- -->
+
+    <div class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="detail.html">Detail</a></li>
+        <li><a href="cart.html">Cart</a></li>
+      </ul>
+    </div>
+
+    <!-- ------------------------------------ -->
+    <div class="container">
+      <div class="product-details" id="product-details"></div>
+      <button id="add-to-cart-btn">Add to Cart</button>
+    </div>
+
+    <script>
+      // JavaScript code
+
+      const productDetails = document.getElementById("product-details");
+      const addToCartBtn = document.getElementById("add-to-cart-btn");
+
+      // Get the product ID from the URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get("id");
+
+      // Fetch the product details using the ID
+      fetch(`https://fakestoreapi.com/products/${productId}`)
+        .then((res) => res.json())
+        .then((product) => {
+          // Display the product details
+          productDetails.innerHTML = `
+            <img src="${product.image}" alt="${product.title}">
+            <h2>${product.title}</h2>
+            <p>Price: $${product.price}</p>
+            <p>Category: ${product.category}</p>
+            <p>Description: ${product.description}</p>
+          `;
+
+          // Add event listener to the "Add to Cart" button
+          addToCartBtn.addEventListener("click", () => {
+            addToCart(product);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching product details:", error);
+        });
+
+      // Function to add a product to the cart
+      function addToCart(product) {
+        const existingCartItems =
+          JSON.parse(localStorage.getItem("cartItems")) || [];
+
+        const existingCartItemIndex = existingCartItems.findIndex(
+          (item) => item.id === product.id
+        );
+
+        if (existingCartItemIndex !== -1) {
+          existingCartItems[existingCartItemIndex].quantity++;
+        } else {
+          const newCartItem = {
+            id: product.id,
+            name: product.title,
+            price: product.price,
+            quantity: 1,
+          };
+          existingCartItems.push(newCartItem);
+        }
+
+        localStorage.setItem("cartItems", JSON.stringify(existingCartItems));
+
+        window.location.href = "cart.html";
+      }
+    </script>
+  </body>
+</html>

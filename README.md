@@ -4,7 +4,7 @@ This is a basic e-commerce web application built by using HTML, CSS and JavaScri
 
 ## Demo
 
-- **Live Demo**: [Ecommerce Web App Demo](https://github.com/rajesh730/ecommerse-frontend)
+- **Live Demo**: [Ecommerce Web App Demo](https://rajesh730.github.io/ecommerce-frontend/)
 
 ## Technologies Used
 
